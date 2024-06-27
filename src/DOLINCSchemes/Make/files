@@ -1,0 +1,13 @@
+surfaceInterpolation = interpolation/surfaceInterpolation
+
+schemes = $(surfaceInterpolation)/schemes
+$(schemes)/USR3/USR3.C
+$(schemes)/CSR4/CSR4.C
+
+doliSchemes = $(surfaceInterpolation)/doliSchemes
+$(doliSchemes)/firstOrderDolincScheme/firstOrderDolincSchemes.C
+$(doliSchemes)/secondOrderDolincScheme/secondOrderDolincSchemes.C
+$(doliSchemes)/UENO2/UENO2.C
+$(doliSchemes)/UENO3/UENO3.C
+
+LIB = $(FOAM_USER_LIBBIN)/libDOLINCSchemes

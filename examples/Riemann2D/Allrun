@@ -1,0 +1,117 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# settings
+
+    # flag to enable computations in parallel mode
+    parallel=true
+
+    # flag to enable reconsturction
+    reconstruct=false
+
+    # grid element number cellNo*cellNo
+    cellNo=128
+
+    # decomposition details
+    dMethod=simple  # hierarchical
+    dNo=4
+    dCut="(2 2 1)"
+
+    # spatial scheme
+    advanceScheme="TVDRungeKutta3"  # ForwardEuler TVDRungeKutta3
+    fluxScheme="Kurganov"  # Tadmor Kurganov
+    scheme="UWENO5 grad(U)"
+    schemeV="UWENO5 grad(U)"
+    schemeTag=$(sed -e 's# #_#g#' -e 's#_grad(.*)##g' <<< "$schemeV")
+    schemeLabel=$(sed -e 's# *grad(.*)##g' <<< "$schemeV")
+
+    # Start-up time step
+    endTime=1.1
+    deltaT=1e-5
+    writeInterval=0.01
+
+    # flag to enable adjustable time step
+    adjustable=true
+    maxCo=0.2
+
+    # number of stored time steps
+    purgeNo=0
+
+
+#------------------------------------------------------------------------------
+
+set -e
+
+# canCompile || exit 0    # Dynamic code
+
+# Change mesh resolution
+sed -i "s/\(^cellNo[ \t]*\).*;$/\1${cellNo};/g" system/blockMeshDict
+
+# Set parallel decomposition
+sed -i "s/\(^numberOfSubdomains[ \t]*\).*;$/\1$dNo;/g" system/decomposeParDict
+sed -i "s/\(^method[ \t]*\).*;$/\1$dMethod;/g" system/decomposeParDict
+sed -i "s/\(^    n[ \t]*\).*;$/\1$dCut;/g" system/decomposeParDict
+
+# Set scheme
+sed -i "s/\(^    scheme[ \t]\+\).*;$/\1$scheme;/g" system/fvSchemes
+sed -i "s/\(^    schemeV[ \t]\+\).*;$/\1$schemeV;/g" system/fvSchemes
+sed -i "s/\(^fluxScheme[ \t]*\).*;\(.*\)$/\1$fluxScheme;\2/g" system/fvSchemes
+sed -i "s/\(^advanceScheme[ \t]*\).*;\(.*\)$/\1$advanceScheme;\2/g" system/fvSchemes
+
+# Set solver details
+sed -i "s/\(^endTime[ \t]*\).*;$/\1$endTime;/g" system/controlDict
+sed -i "s/\(^deltaT[ \t]*\).*;$/\1$deltaT;/g" system/controlDict
+sed -i "s/\(^writeInterval[ \t]*\).*;$/\1$writeInterval;/g" system/controlDict
+
+
+# Change time step method
+if [ "$adjustable" = true ]
+then
+
+    sed -i "s/\(^writeControl[ \t]*\).*;$/\1adjustableRunTime;/g" system/controlDict
+    sed -i "s/\(^adjustTimeStep[ \t]*\).*;$/\1yes;/g" system/controlDict
+
+else
+
+    sed -i "s/\(^writeControl[ \t]*\).*;$/\1runTime;/g" system/controlDict
+    sed -i "s/\(^adjustTimeStep[ \t]*\).*;$/\1no;/g" system/controlDict
+
+fi
+sed -i "s/\(^maxCo[ \t]*\).*;$/\1$maxCo;/g" system/controlDict
+
+# Set the number of stored time stpes
+sed -i "s/\(^purgeWrite[ \t]*\).*;$/\1$purgeNo;/g" system/controlDict
+
+
+restore0Dir
+
+runApplication blockMesh
+
+runApplication checkMesh -allGeometry
+
+runApplication setFields
+
+if [ "$parallel" = true ]
+then
+
+    runApplication decomposePar -force
+
+    runParallel $(getApplication)
+
+    if [ "$reconstruct" = true ]
+    then
+        runApplication reconstructPar
+    fi
+
+else
+
+    runApplication $(getApplication)
+
+fi
+
+echo "Done computation"
+
+
+#------------------------------------------------------------------------------

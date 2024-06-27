@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defaultFieldValues
+(
+    volScalarFieldValue p 1.5
+    volScalarFieldValue T #eval "1.5/1.5/1.0"
+    volVectorFieldValue U (0 0 0)
+);
+
+regions
+(
+    // Set cell values
+    // (does zerogradient on boundaries)
+    // (two box point shoud set a vector point to positive xyz directions)
+    boxToCell
+    {
+        box (0 0 -100) (100 100 100);
+
+        fieldValues
+        (
+            volScalarFieldValue p 1.5
+            volScalarFieldValue T #eval "1.5/1.5/1.0"
+            volVectorFieldValue U (0 0 0)
+        );
+    }
+
+    boxToCell
+    {
+        box (0 -100 -100) (100 0 100);
+
+        fieldValues
+        (
+            volScalarFieldValue p 0.3
+            volScalarFieldValue T #eval "0.3/(33.0/62.0)/1.0"
+            volVectorFieldValue U (0 #eval{4.0/sqrt(11.0)} 0)
+        );
+    }
+
+    boxToCell
+    {
+        box (-100 0 -100) (0 100 100);
+
+        fieldValues
+        (
+            volScalarFieldValue p 0.3
+            volScalarFieldValue T #eval "0.3/(33.0/62.0)/1.0"
+            volVectorFieldValue U (#eval{4.0/sqrt(11.0)} 0 0)
+        );
+    }
+
+    boxToCell
+    {
+        box (-100 -100 -100) (0 0 100);
+
+        fieldValues
+        (
+            volScalarFieldValue p #eval "9.0/310.0"
+            volScalarFieldValue T #eval "(9.0/310.0)/(77.0/558.0)/1.0"
+            volVectorFieldValue U (#eval{4.0/sqrt(11.0)} #eval{4.0/sqrt(11.0)} 0)
+        );
+    }
+);
+
+// ************************************************************************* //

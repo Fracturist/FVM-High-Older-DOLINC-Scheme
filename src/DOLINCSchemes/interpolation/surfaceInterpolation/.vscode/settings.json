@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "*Dict": "OpenFOAM",
+        "*Properties": "OpenFOAM",
+        "fvSchemes": "OpenFOAM",
+        "fvSolution": "OpenFOAM",
+        "**/constant/g": "OpenFOAM",
+        "**/0/*": "OpenFOAM",
+        "CSR4.C": "cpp",
+        "USR3.C": "cpp",
+        "firstOrderDolincSchemes.C": "cpp",
+        "secondOrderDolincScheme.C": "cpp",
+        "secondOrderDolincSchemes.C": "cpp",
+        "UENO3.C": "cpp"
+    }
+}

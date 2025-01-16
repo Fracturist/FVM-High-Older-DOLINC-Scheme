@@ -4,14 +4,14 @@ This repo provides code for our paper [Order-lifted data inversion/retrieval met
 * Authors: Hao Guo \[[Google Scholar](https://scholar.google.com/citations?hl=zh-CN&user=ZOhz0b8AAAAJ)\], Boxing Hu, Peixue Jiang, Xiaofeng Ma, Yinhai Zhu
 
 <p align="center">
-  <img align="center" width="500" src="/docs/RTI4096.png">
+  <img align="center" width="400" src="/docs/RTI4096.png">
 </p>
-<p align="center" > Density contours of RayInverter-version method effectiveness in reducing divergence. </p>
+<p align="center" > Density contours of Rayleigh–Taylor instability problem using high-order DOLINC scheme. </p>
 
 <p align="center">
-  <img align="center" width="500" src="/docs/R2D4096.png">
+  <img align="center" width="400" src="/docs/R2D4096.png">
 </p>
-<p align="center"> Real performance of inverter spectrum-based method against white noise maker. </p>
+<p align="center"> Density contours of two-dimensional Riemann problem using high-order DOLINC scheme. </p>
 
 
 ## Abstract:

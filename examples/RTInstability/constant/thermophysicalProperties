@@ -10,49 +10,38 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvSchemes;
+    object      thermophysicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fluxScheme          Kurganov;  // Tadmor Kurganov
-
-advanceScheme       TVDRungeKutta3;  // ForwardEuler TVDRungeKutta3
-
-ddtSchemes
+thermoType
 {
-    default         Euler;
+    type            hePsiThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          eConst;
+    equationOfState perfectGas;
+    specie          specie;
+    energy          sensibleInternalEnergy;
 }
 
-gradSchemes
+// monatomicGas
+mixture
 {
-    default         Gauss linear;
-}
-
-divSchemes
-{
-    default         none;
-}
-
-laplacianSchemes
-{
-    default         none;
-}
-
-interpolationSchemes
-{
-    default         none;
-
-    scheme          UENO3 grad(U) 1.2;
-    schemeV         UENO3 grad(U) 1.2;
-
-    reconstruct(rho) $scheme;
-    reconstruct(U)  $schemeV;
-    reconstruct(T)  $scheme;
-}
-
-snGradSchemes
-{
-    default         none;
+    specie
+    {
+        molWeight   8.31447006650545e3;
+    }
+    thermodynamics
+    {
+        Cv          1.5;
+        Hf          0;
+    }
+    transport
+    {
+        mu          0;
+        Pr          1;
+    }
 }
 
 

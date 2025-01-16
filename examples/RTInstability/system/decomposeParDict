@@ -10,49 +10,17 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvSchemes;
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fluxScheme          Kurganov;  // Tadmor Kurganov
+numberOfSubdomains  4;
 
-advanceScheme       TVDRungeKutta3;  // ForwardEuler TVDRungeKutta3
+method  simple;
 
-ddtSchemes
+coeffs
 {
-    default         Euler;
-}
-
-gradSchemes
-{
-    default         Gauss linear;
-}
-
-divSchemes
-{
-    default         none;
-}
-
-laplacianSchemes
-{
-    default         none;
-}
-
-interpolationSchemes
-{
-    default         none;
-
-    scheme          UENO3 grad(U) 1.2;
-    schemeV         UENO3 grad(U) 1.2;
-
-    reconstruct(rho) $scheme;
-    reconstruct(U)  $schemeV;
-    reconstruct(T)  $scheme;
-}
-
-snGradSchemes
-{
-    default         none;
+    n   (1 4 1);
 }
 
 

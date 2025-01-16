@@ -1,0 +1,90 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+accuracy        32;
+converge        16;
+solRes          #eval{ 1e-$accuracy };
+cvgRes          #eval{ 1e-$converge };
+
+solvers
+{
+    "(p|rho)"
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       $solRes;
+        relTol          0;
+    }
+
+    "(p|rho)Final"
+    {
+        $p;
+    }
+
+    "(U|e)"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       $solRes;
+        relTol          0;
+    }
+
+    "(U|e)Final"
+    {
+        $U;
+    }
+}
+
+PIMPLE
+{
+    momentumPredictor yes;
+    consistant      yes;
+    nOuterCorrectors 10;
+    nCorrectors     1;
+    nNonOrthogonalCorrectors 0;
+
+    residualControl
+    {
+        "(p|rho)"
+        {
+            relTol          0;
+            tolerance       $cvgRes;
+        }
+
+        "(U|e)"
+        {
+            relTol          0;
+            tolerance       $cvgRes;
+        }
+    }
+}
+
+// Based on Fluent
+relaxationFactors
+{
+    // fields
+    // {
+    //     p               0.3;
+    // }
+
+    equations
+    {
+        U               0.7;
+    }
+}
+
+
+// ************************************************************************* //

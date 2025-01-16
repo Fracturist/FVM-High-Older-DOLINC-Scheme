@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs            (DOLINCSchems);
+libs            (DOLINCSchemes);
 
 application     EulerFoam;
 

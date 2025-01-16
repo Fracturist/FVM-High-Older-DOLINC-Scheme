@@ -1,0 +1,2 @@
+wmake src/DOLINCSchemes
+wmake src/EulerFoam

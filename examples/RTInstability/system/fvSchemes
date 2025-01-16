@@ -14,13 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fluxScheme          Kurganov;  // Tadmor Kurganov
-
-advanceScheme       TVDRungeKutta3;  // ForwardEuler TVDRungeKutta3
-
 ddtSchemes
 {
-    default         Euler;
+    default         backward;
 }
 
 gradSchemes
@@ -31,28 +27,32 @@ gradSchemes
 divSchemes
 {
     default         none;
-}
-
-laplacianSchemes
-{
-    default         none;
-}
-
-interpolationSchemes
-{
-    default         none;
 
     scheme          UENO3 grad(U) 1.2;
     schemeV         UENO3 grad(U) 1.2;
 
-    reconstruct(rho) $scheme;
-    reconstruct(U)  $schemeV;
-    reconstruct(T)  $scheme;
+    div(phi,U)      Gauss $schemeV;
+
+    div(phi,e)      Gauss $scheme;
+    div(phi,K)      Gauss $scheme;
+    div(phiv,p)     Gauss $scheme;
+
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear orthogonal;
+}
+
+interpolationSchemes
+{
+    default         linear;
 }
 
 snGradSchemes
 {
-    default         none;
+    default         orthogonal;
 }
 
 

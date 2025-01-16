@@ -1,0 +1,14 @@
+#!/bin/bash
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
+#------------------------------------------------------------------------------
+
+cleanCase0
+
+rm -rf logs > /dev/null 2>&1
+
+rm -rf *.png > /dev/null 2>&1
+
+rm -rf *.avi > /dev/null 2>&1
+
+#------------------------------------------------------------------------------

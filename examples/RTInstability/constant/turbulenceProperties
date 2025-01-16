@@ -10,50 +10,11 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvSchemes;
+    object      turbulenceProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fluxScheme          Kurganov;  // Tadmor Kurganov
-
-advanceScheme       TVDRungeKutta3;  // ForwardEuler TVDRungeKutta3
-
-ddtSchemes
-{
-    default         Euler;
-}
-
-gradSchemes
-{
-    default         Gauss linear;
-}
-
-divSchemes
-{
-    default         none;
-}
-
-laplacianSchemes
-{
-    default         none;
-}
-
-interpolationSchemes
-{
-    default         none;
-
-    scheme          UENO3 grad(U) 1.2;
-    schemeV         UENO3 grad(U) 1.2;
-
-    reconstruct(rho) $scheme;
-    reconstruct(U)  $schemeV;
-    reconstruct(T)  $scheme;
-}
-
-snGradSchemes
-{
-    default         none;
-}
+simulationType laminar;
 
 
 // ************************************************************************* //

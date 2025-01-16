@@ -10,50 +10,45 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvSchemes;
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fluxScheme          Kurganov;  // Tadmor Kurganov
+libs            (DOLINCSchemes);
 
-advanceScheme       TVDRungeKutta3;  // ForwardEuler TVDRungeKutta3
+application     rhoPimpleFoam;
 
-ddtSchemes
-{
-    default         Euler;
-}
+startFrom       startTime;
 
-gradSchemes
-{
-    default         Gauss linear;
-}
+startTime       0;
 
-divSchemes
-{
-    default         none;
-}
+stopAt          endTime;
 
-laplacianSchemes
-{
-    default         none;
-}
+endTime         1.95;
 
-interpolationSchemes
-{
-    default         none;
+deltaT          1e-4;
 
-    scheme          UENO3 grad(U) 1.2;
-    schemeV         UENO3 grad(U) 1.2;
+writeControl    adjustableRunTime;
 
-    reconstruct(rho) $scheme;
-    reconstruct(U)  $schemeV;
-    reconstruct(T)  $scheme;
-}
+writeInterval   0.01;
 
-snGradSchemes
-{
-    default         none;
-}
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.5;
 
 
 // ************************************************************************* //

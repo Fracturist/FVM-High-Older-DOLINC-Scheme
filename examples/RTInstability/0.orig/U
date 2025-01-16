@@ -1,0 +1,96 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField	#codeStream
+{
+    codeInclude
+    #{
+        #include "fvCFD.H"
+    #};
+
+    codeOptions
+    #{
+        -I$(LIB_SRC)/finiteVolume/lnInclude \
+        -I$(LIB_SRC)/meshTools/lnInclude
+    #};
+
+    codeLibs
+    #{
+        -lmeshTools \
+        -lfiniteVolume
+    #};
+
+    code
+    #{
+        const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+        const fvMesh& mesh = refCast<const fvMesh>(d.db());
+
+        const scalar PI = constant::mathematical::pi;
+
+        vectorField U(mesh.nCells(), vector::zero);
+
+        scalar gamma = 5.0/3.0;
+        scalar Rg = 1.0;
+        scalar Ma0 = 0.1;
+        scalar T0 = 0.5;
+        scalar tau = 6.0;
+        scalar a0 = Foam::sqrt(gamma*Rg*T0);
+        scalar epsl = Ma0*a0;
+
+        forAll(U, i)
+        {
+            const scalar x = mesh.C()[i][0];
+            const scalar y = mesh.C()[i][1];
+
+            U[i][1] = epsl*cos(8*PI*x)*Foam::pow(sin(PI*y), tau);
+        }
+
+        U.writeEntry("", os);
+    #};
+};
+
+boundaryField
+{
+    top
+    {
+        type            slip;
+    }
+
+    bottom
+    {
+        type            zeroGradient;
+    }
+
+    left
+    {
+        type            slip;
+    }
+
+    right
+    {
+        type            slip;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+
+
+// ************************************************************************* //

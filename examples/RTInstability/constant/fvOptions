@@ -10,49 +10,32 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvSchemes;
+    object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fluxScheme          Kurganov;  // Tadmor Kurganov
-
-advanceScheme       TVDRungeKutta3;  // ForwardEuler TVDRungeKutta3
-
-ddtSchemes
+buoyancyForce1
 {
-    default         Euler;
+    // Mandatory entries (unmodifiable)
+    type             buoyancyForce;
+    fields           (U);
+
+    // Mandatory/Optional (inherited) entries
+    selectionMode    all;
 }
 
-gradSchemes
+
+buoyancyEnergy1
 {
-    default         Gauss linear;
-}
+    // Mandatory entries (unmodifiable)
+    type             buoyancyEnergy;
+    fields           (e);
 
-divSchemes
-{
-    default         none;
-}
+    // Optional entries (runtime modifiable)
+    U                U;
 
-laplacianSchemes
-{
-    default         none;
-}
-
-interpolationSchemes
-{
-    default         none;
-
-    scheme          UENO3 grad(U) 1.2;
-    schemeV         UENO3 grad(U) 1.2;
-
-    reconstruct(rho) $scheme;
-    reconstruct(U)  $schemeV;
-    reconstruct(T)  $scheme;
-}
-
-snGradSchemes
-{
-    default         none;
+    // Mandatory/Optional (inherited) entries
+    selectionMode    all;
 }
 
 
